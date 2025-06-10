@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "lint": "eslint src --ext .ts",
+    "lint": "prettier src --check && eslint src --ext .ts",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)",
     "test": "jest"
   },
