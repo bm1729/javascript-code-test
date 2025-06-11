@@ -1,15 +1,15 @@
-import { upperCase } from "./foo";
+import axios from "axios";
+import { fetchPokemon } from "./foo";
+
+jest.mock("axios");
 
 describe("foo", () => {
-  it("should return true", () => {
-    expect(true).toBe(true);
-  });
+  it("pokemon API should return a pokemon", async () => {
+    const mockResponse = { name: "ditto" };
+    axios.get = jest.fn().mockResolvedValue({data: mockResponse});
 
-  it("should return false", () => {
-    expect(false).toBe(false);
-  });
+    const result = await fetchPokemon();
 
-  it("uppercases a string", () => {
-    expect(upperCase("hello world")).toBe("HELLO WORLD");
+    expect(result).toEqual(mockResponse);
   });
 });
