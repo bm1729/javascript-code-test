@@ -1,15 +1,23 @@
-import axios from "axios";
+import mockAxios from "jest-mock-axios";
 import { fetchPokemon } from "./foo";
 
-jest.mock("axios");
-
 describe("foo", () => {
-  it("pokemon API should return a pokemon", async () => {
-    const mockResponse = { name: "ditto" };
-    axios.get = jest.fn().mockResolvedValue({ data: mockResponse });
+  afterEach(() => {
+    mockAxios.reset();
+  });
 
-    const result = await fetchPokemon();
+  it("pokemon API should return a pokemon", () => {
+    let catchFn = jest.fn(),
+      thenFn = jest.fn();
 
-    expect(result).toEqual(mockResponse);
+    fetchPokemon().then(thenFn).catch(catchFn);
+
+    expect(mockAxios.get).toHaveBeenCalledWith("/pokemon/ditto");
+
+    const mockResponse = { data: { name: "ditto" }, status: 200 };
+    mockAxios.mockResponse(mockResponse);
+
+    expect(thenFn).toHaveBeenCalled();
+    expect(catchFn).not.toHaveBeenCalled();
   });
 });
