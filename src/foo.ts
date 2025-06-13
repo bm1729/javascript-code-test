@@ -1,10 +1,4 @@
-import axios from "axios";
-
-const axiosInstance = axios.create({
-  baseURL: "https://pokeapi.co/api/v2",
-  timeout: 1000,
-  headers: { "Content-Type": "application/json" },
-});
+import axios, { AxiosInstance } from "axios";
 
 const bookSearchApiConfigDefaults = {
   timeout: 1000,
@@ -15,12 +9,38 @@ type BookSearchApiClientConfig = {
   timeout?: number;
 };
 
+type BookSearchQueryParams = {
+  authorName: string;
+  limit?: number;
+  format?: "json" | "xml";
+};
+
+type BookSearchApiItem = {
+  book: {
+    title: string;
+    author: string;
+    isbn: string;
+  };
+  stock: {
+    quantity: number;
+    price: number;
+  };
+};
+
+type Book = {
+  title: string;
+  author: string;
+  isbn: string;
+  quantity: number;
+  price: number;
+};
+
 // TODO Need to write client code showing how to use the BookSearchApiClient
 
 // TODO Need to update the readme
 
 class BookSearchApiClient {
-  axiosInstance: Axios.AxiosInstance;
+  axiosInstance: AxiosInstance;
 
   constructor(config: BookSearchApiClientConfig) {
     this.axiosInstance = axios.create({
@@ -31,12 +51,32 @@ class BookSearchApiClient {
 
   // TODO Needs to parse json and xml
   // TODO Interceptors for logging and error handling
-  fetchPokemon() {
-    return axiosInstance.get("/pokemon/ditto").then((response) => {
-      console.log("Response received from API:", response);
-      return response;
-    });
+  fetchByAuthor(params: BookSearchQueryParams): Promise<Book[]> {
+    {
+      // Apply default values for parameters
+      const { authorName, limit, format } = {
+        ...{ limit: 10, format: "json" },
+        ...params,
+      };
+
+      return this.axiosInstance
+        .get("/by-author", {
+          params: { q: authorName, limit, format },
+        })
+        .then((response) => {
+          return response.data as BookSearchApiItem[];
+        })
+        .then((response) =>
+          response.map((item) => ({
+            title: item.book.title,
+            author: item.book.author,
+            isbn: item.book.isbn,
+            quantity: item.stock.quantity,
+            price: item.stock.price,
+          })),
+        );
+    }
   }
 }
 
-export { BookSearchApiClientConfig, BookSearchApiClient };
+export { BookSearchApiClient, Book };
