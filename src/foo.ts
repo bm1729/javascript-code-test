@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from 'axios';
 
 const bookSearchApiConfigDefaults = {
   timeout: 1000,
@@ -12,7 +12,7 @@ type BookSearchApiClientConfig = {
 type BookSearchQueryParams = {
   authorName: string;
   limit?: number;
-  format?: "json" | "xml";
+  format?: 'json' | 'xml';
 };
 
 type BookSearchApiItem = {
@@ -55,12 +55,12 @@ class BookSearchApiClient {
     {
       // Apply default values for parameters
       const { authorName, limit, format } = {
-        ...{ limit: 10, format: "json" },
+        ...{ limit: 10, format: 'json' },
         ...params,
       };
 
       return this.axiosInstance
-        .get("/by-author", {
+        .get('/by-author', {
           params: { q: authorName, limit, format },
         })
         .then((response) => {
