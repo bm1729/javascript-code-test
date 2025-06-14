@@ -6,18 +6,13 @@ BookSearchApiClient.prototype.getBooksByAuthor = function (authorName, limit) {
   var result = [];
   var xhr = new XMLHttpRequest();
   xhr.open(
-    "GET",
-    "http://api.book-seller-example.com/by-author?q=" +
-      authorName +
-      "&limit=" +
-      limit +
-      "&format=" +
-      this.format,
+    'GET',
+    'http://api.book-seller-example.com/by-author?q=' + authorName + '&limit=' + limit + '&format=' + this.format,
   );
 
   xhr.onload = function () {
     if (xhr.status == 200) {
-      if (this.format == "json") {
+      if (this.format == 'json') {
         var json = JSON.parse(xhr.responseText);
 
         result = json.map(function (item) {
@@ -29,7 +24,7 @@ BookSearchApiClient.prototype.getBooksByAuthor = function (authorName, limit) {
             price: item.stock.price,
           };
         });
-      } else if (this.format == "xml") {
+      } else if (this.format == 'xml') {
         var xml = xhr.responseXML;
 
         result = xml.documentElement.childNodes.map(function (item) {
@@ -45,7 +40,7 @@ BookSearchApiClient.prototype.getBooksByAuthor = function (authorName, limit) {
 
       return result;
     } else {
-      alert("Request failed.  Returned status of " + xhr.status);
+      alert('Request failed.  Returned status of ' + xhr.status);
     }
   };
   xhr.send();
