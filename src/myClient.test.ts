@@ -1,6 +1,7 @@
 import nock from 'nock';
 import { randomUUID } from 'crypto';
 import got from 'got';
+import { describe, test, expect, afterEach } from 'vitest';
 
 // axios.defaults.adapter = require('axios/lib/adapters/http'); // Ensure Node adapter
 
@@ -13,7 +14,7 @@ nock.emitter.on('no match', (req) => {
 describe('MyApiClient', () => {
   afterEach(() => nock.cleanAll());
 
-  it('can get todos with got', async () => {
+  test('can get todos with got', async () => {
     const todoObject = {
       todos: [
         { task: 'Two', _id: 9, completed: false },
@@ -32,7 +33,12 @@ describe('MyApiClient', () => {
             options.headers['x-correlation-id'] = correlationId;
             // Attach to options for later use
             (options as any)._correlationId = correlationId;
-            console.log('Requesting:', options.url.href, 'Correlation ID:', correlationId);
+            console.log(
+              'Requesting:',
+              typeof options.url === 'string' ? options.url : options.url?.href,
+              'Correlation ID:',
+              correlationId,
+            );
           },
         ],
         afterResponse: [
@@ -52,7 +58,7 @@ describe('MyApiClient', () => {
     scope.done();
   });
 
-  it('can get todos', async () => {
+  test('can get todos', async () => {
     const todoObject = {
       todos: [
         { task: 'Two', _id: 9, completed: false },
