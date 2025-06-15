@@ -1,5 +1,5 @@
 import nock from 'nock';
-import { BookSearchApiClient } from './foo.js';
+import { BookSearchApiClient } from './foo';
 import { describe, test, expect, afterEach } from 'vitest';
 
 const apiJsonResponse = [
