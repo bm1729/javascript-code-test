@@ -15,19 +15,19 @@
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "9.28.0",
-    "@tsconfig/node22": "^22.0.2",
-    "@types/node": "^24.0.1",
+    "@tsconfig/node22": "22.0.2",
+    "@types/node": "24.0.1",
     "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "8.34.0",
     "eslint": "9.28.0",
     "eslint-config-prettier": "10.1.5",
     "eslint-plugin-prettier": "5.4.1",
     "globals": "16.2.0",
-    "nock": "^14.0.5",
+    "nock": "14.0.5",
     "prettier": "3.5.3",
-    "typescript": "^5.8.3",
+    "typescript": "5.8.3",
     "typescript-eslint": "8.34.0",
-    "vitest": "^3.2.3"
+    "vitest": "3.2.3"
   },
   "type": "module",
   "engines": {
@@ -35,7 +35,7 @@
     "npm": "10.9.2"
   },
   "dependencies": {
-    "fast-xml-parser": "^5.2.5",
+    "fast-xml-parser": "5.2.5",
     "got": "14.4.7"
   }
 }
