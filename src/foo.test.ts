@@ -1,30 +1,27 @@
-// import mockAxios from 'jest-mock-axios';
-// import { BookSearchApiClient } from './foo';
-import { expect, test } from 'vitest';
+import nock from 'nock';
+import { BookSearchApiClient } from './foo.js';
+import { describe, test, expect, afterEach } from 'vitest';
 
-test('foobar', () => {
-  expect(true).toBe(true);
-});
-// const apiJsonResponse = [
-//   {
-//     book: { title: 'The Shining', author: 'Stephen King', isbn: '978-0307743657' },
-//     stock: { quantity: 5, price: 19.99 },
-//   },
-//   {
-//     book: { title: 'It', author: 'Stephen King', isbn: '978-0450411434' },
-//     stock: { quantity: 3, price: 15.99 },
-//   },
-//   {
-//     book: { title: 'Misery', author: 'Stephen King', isbn: '978-0450411434' },
-//     stock: { quantity: 2, price: 12.99 },
-//   },
-// ];
+const apiJsonResponse = [
+  {
+    book: { title: 'The Shining', author: 'Stephen King', isbn: '978-0307743657' },
+    stock: { quantity: 5, price: 19.99 },
+  },
+  {
+    book: { title: 'It', author: 'Stephen King', isbn: '978-0450411434' },
+    stock: { quantity: 3, price: 15.99 },
+  },
+  {
+    book: { title: 'Misery', author: 'Stephen King', isbn: '978-0450411434' },
+    stock: { quantity: 2, price: 12.99 },
+  },
+];
 
-// const expectedClientResponse = [
-//   { author: 'Stephen King', isbn: '978-0307743657', price: 19.99, quantity: 5, title: 'The Shining' },
-//   { author: 'Stephen King', isbn: '978-0450411434', price: 15.99, quantity: 3, title: 'It' },
-//   { author: 'Stephen King', isbn: '978-0450411434', price: 12.99, quantity: 2, title: 'Misery' },
-// ];
+const expectedClientResponse = [
+  { author: 'Stephen King', isbn: '978-0307743657', price: 19.99, quantity: 5, title: 'The Shining' },
+  { author: 'Stephen King', isbn: '978-0450411434', price: 15.99, quantity: 3, title: 'It' },
+  { author: 'Stephen King', isbn: '978-0450411434', price: 12.99, quantity: 2, title: 'Misery' },
+];
 
 // const config = {
 //   baseURL: 'http://api.book-seller-example.com',
@@ -33,7 +30,24 @@ test('foobar', () => {
 
 // type FetchByAuthorParams = Parameters<BookSearchApiClient['fetchByAuthor']>[0];
 
-// describe('BookSearchApiClient', () => {
+describe('BookSearchApiClient', () => {
+  afterEach(() => nock.cleanAll());
+
+  test('can get books with got', async () => {
+    const client = new BookSearchApiClient({
+      baseURL: 'https://www.example.com',
+      timeout: 1000,
+    });
+    const scope = nock('https://www.example.com')
+      .get('/by-author')
+      .query({ q: 'Stephen King', limit: 10, format: 'json' })
+      .reply(200, apiJsonResponse);
+    const response = await client.fetchByAuthor({ authorName: 'Stephen King', limit: 10, format: 'json' });
+
+    expect(response).toEqual(expectedClientResponse);
+    scope.done();
+  });
+});
 //   let client: BookSearchApiClient;
 //   let thenFn: jest.Mock, catchFn: jest.Mock;
 
