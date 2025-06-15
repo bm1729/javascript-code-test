@@ -3,6 +3,8 @@ import { BookSearchApiClient } from './BookSearchApiClient';
 import { describe, test, expect } from 'vitest';
 import { before } from 'node:test';
 
+const baseURL = 'https://www.example.com';
+
 const apiJsonResponse = [
   {
     book: { title: 'The Shining', author: 'Stephen King', isbn: '978-0307743657' },
@@ -60,7 +62,7 @@ describe('BookSearchApiClient', () => {
   let client: BookSearchApiClient;
   before(() => {
     client = new BookSearchApiClient({
-      baseURL: 'https://www.example.com',
+      baseURL,
       timeout: 1000,
     });
     nock.cleanAll();
@@ -68,7 +70,7 @@ describe('BookSearchApiClient', () => {
 
   test('can get books using json format', async () => {
     // arrange
-    const scope = nock('https://www.example.com')
+    const scope = nock(baseURL)
       .get('/by-author')
       .query({ q: 'Stephen King', limit: 10, format: 'json' })
       .reply(200, apiJsonResponse);
@@ -83,7 +85,7 @@ describe('BookSearchApiClient', () => {
 
   test('can get books using xml format', async () => {
     // arrange
-    const scope = nock('https://www.example.com')
+    const scope = nock(baseURL)
       .get('/by-author')
       .query({ q: 'Stephen King', limit: 10, format: 'xml' })
       .reply(200, apiXmlResponse);
@@ -98,7 +100,7 @@ describe('BookSearchApiClient', () => {
 
   test('can handle errors', async () => {
     // arrange
-    const scope = nock('https://www.example.com')
+    const scope = nock(baseURL)
       .get('/by-author')
       .query({ q: 'Stephen King', limit: 10, format: 'json' })
       .replyWithError('Network Error');
